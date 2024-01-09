@@ -18,12 +18,18 @@ export default class NewBill {
   handleChangeFile = e => {
     e.preventDefault()
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
+    const email = JSON.parse(localStorage.getItem("user")).email
+
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
     const formData = new FormData()
-    const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
     formData.append('email', email)
+
+    if (!fileName.endsWith('.jpg') && !fileName.endsWith('.jpeg') && !fileName.endsWith('.png')){
+      console.error('File must be png, jpg or jpeg');
+      return ;
+    }
 
     this.store
       .bills()
@@ -57,6 +63,12 @@ export default class NewBill {
       fileName: this.fileName,
       status: 'pending'
     }
+
+    if (null === this.fileName){
+      console.error('File must be png, jpg or jpeg');
+      return false;
+    }
+
     this.updateBill(bill)
     this.onNavigate(ROUTES_PATH['Bills'])
   }
