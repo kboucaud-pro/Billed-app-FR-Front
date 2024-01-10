@@ -146,6 +146,8 @@ export default class {
     }
 
     bills.forEach(bill => {
+      //Clear previous event handlers to prevent double trigger
+      $(`#open-bill${bill.id}`).off();
       $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
     })
 
