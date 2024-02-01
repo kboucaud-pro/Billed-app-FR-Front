@@ -21,7 +21,7 @@ export default class NewBill {
     const email = JSON.parse(localStorage.getItem("user")).email
 
     const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
+    const fileName = file.name;
     const formData = new FormData()
     formData.append('file', file)
     formData.append('email', email)
@@ -82,7 +82,9 @@ export default class NewBill {
       .then(() => {
         this.onNavigate(ROUTES_PATH['Bills'])
       })
-      .catch(error => console.error(error))
+      .catch(error => {
+        console.error(error);
+      })
     }
   }
 }
