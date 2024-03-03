@@ -47,7 +47,7 @@ export default ({ data: bills, loading, error }) => {
   } else if (error) {
     return ErrorPage(error)
   }
-  
+
   return (`
     <div class='layout'>
       ${VerticalLayout(120)}
@@ -69,7 +69,7 @@ export default ({ data: bills, loading, error }) => {
               </tr>
           </thead>
           <tbody data-testid="tbody">
-            ${rows(bills !== undefined ? bills.sort((a, b) => ((a.date < b.date) ? 1 : -1)) : bills)}
+            ${rows(bills !== undefined ? bills.sort(function(a, b){ return new Date(Date.parse(b.date)) - new Date(Date.parse(a.date))}) : bills)}
           </tbody>
           </table>
         </div>

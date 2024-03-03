@@ -5,7 +5,7 @@
 import { fireEvent, screen, waitFor } from "@testing-library/dom"
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
-import { ROUTES_PATH } from "../constants/routes.js";
+import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store.js";
 import userEvent from '@testing-library/user-event'
@@ -80,6 +80,26 @@ describe("Given I am connected as an employee", () => {
 
     expect(formatedBills).toBeTruthy();
   })
+  test("Click on New Bill button open the page", async () => {
+    Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+    window.localStorage.setItem('user', JSON.stringify({
+      type: 'Employee'
+    }))
+    document.body.innerHTML = BillsUI({ data: bills });
+    const onNavigate = (pathname) => {
+      document.body.innerHTML = ROUTES({ pathname })
+    }
+    const billsObject = new Bills({
+      document, onNavigate, store: mockStore, localStorage: window.localStorage
+    });
+
+    const handleClickNewBill = jest.fn(billsObject.handleClickNewBill);
+    const newBillButton = screen.getByTestId("btn-new-bill");
+    newBillButton.addEventListener("click", handleClickNewBill);
+    userEvent.click(newBillButton);
+    expect(handleClickNewBill).toHaveBeenCalled();
+    expect(screen.getAllByText("Envoyer une note de frais")).toBeTruthy();
+  })
 })
 
 describe("I am an employee who want to access my bills", () => {
@@ -119,10 +139,11 @@ describe("When an error occurs on bills API", () => {
   test("Fetch bills form API and get 404 Error", async () => {
     mockStore.bills.mockImplementationOnce(() => {
       return {
-        list : () =>  {
+        list: () => {
           return Promise.reject(new Error("Erreur 404"))
         }
-      }})
+      }
+    })
     window.onNavigate(ROUTES_PATH.Bills);
     await new Promise(process.nextTick);
     const message = await screen.getByText(/Erreur 404/);
@@ -132,10 +153,11 @@ describe("When an error occurs on bills API", () => {
   test("Fetch bills form API and get 500 Error", async () => {
     mockStore.bills.mockImplementationOnce(() => {
       return {
-        list : () =>  {
+        list: () => {
           return Promise.reject(new Error("Erreur 500"))
         }
-      }})
+      }
+    })
     window.onNavigate(ROUTES_PATH.Bills);
     await new Promise(process.nextTick);
     const message = await screen.getByText(/Erreur 500/);
