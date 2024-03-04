@@ -19,18 +19,18 @@ export default class NewBill {
     e.preventDefault()
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const email = JSON.parse(localStorage.getItem("user")).email
-    //var DOMJustificatifError = this.document.querySelector('.justificatif-error');
+    var DOMJustificatifError = this.document.querySelector('.justificatif-error');
 
     const filePath = e.target.value.split(/\\/g)
     const fileName = file.name;
     const formData = new FormData()
     formData.append('file', file)
     formData.append('email', email)
-    //DOMJustificatifError.innerHTML = "";
+    if(DOMJustificatifError) DOMJustificatifError.innerHTML = "";
 
     if (!fileName.endsWith('.jpg') && !fileName.endsWith('.jpeg') && !fileName.endsWith('.png')){
       console.error('File must be png, jpg or jpeg');
-      //DOMJustificatifError.innerHTML = "Le fichier doit être au format png, jpg ou jpeg";
+      if(DOMJustificatifError) DOMJustificatifError.innerHTML = "Le fichier doit être au format png, jpg ou jpeg";
       return ;
     }
 
@@ -53,9 +53,11 @@ export default class NewBill {
     e.preventDefault()
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
     const email = JSON.parse(localStorage.getItem("user")).email;
-    //var DOMJustificatifError = this.document.querySelector('.justificatif-error');
+    var DOMJustificatifError = this.document.querySelector('.justificatif-error');
 
-    //DOMJustificatifError.innerHTML = "";
+    console.log('DOMJustificatifError :');
+    console.log(DOMJustificatifError);
+    if(DOMJustificatifError) DOMJustificatifError.innerHTML = "";
     const bill = {
       email,
       type: e.target.querySelector(`select[data-testid="expense-type"]`).value,
@@ -72,7 +74,7 @@ export default class NewBill {
 
     if (null === this.fileName){
       console.error('File must be png, jpg or jpeg');
-      //DOMJustificatifError.innerHTML = "Le fichier doit être au format png, jpg ou jpeg";
+      if(DOMJustificatifError) DOMJustificatifError.innerHTML = "Le fichier doit être au format png, jpg ou jpeg";
       return false;
     }
 
